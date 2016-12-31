@@ -1,6 +1,5 @@
+from wavvy import app
 from flask import Flask, url_for, render_template, request, session, escape
-
-app = Flask(__name__)
 
 
 @app.route('/hello')
