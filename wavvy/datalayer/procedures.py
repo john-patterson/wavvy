@@ -9,8 +9,8 @@ __all__ = ['add_user']
 
 
 def hash_pass(plain_password):
-    return pass_algorithm\
-        .using(rounds=hash_iterations, salt_size=salt_bytes)\
+    return pass_algorithm \
+        .using(rounds=hash_iterations, salt_size=salt_bytes) \
         .hash(plain_password)
 
 
@@ -23,3 +23,8 @@ def add_user(*, username, plain_password, team=None):
         db.add(user)
 
 
+def authenticate(*, username, plain_password):
+    user = User.query.filter(User.username.ilike(username)).first()
+    if pass_algorithm.verify(plain_password, user.password):
+        return True
+    return False
