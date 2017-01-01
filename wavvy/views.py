@@ -1,9 +1,18 @@
-from flask import render_template, request, session, escape
+from flask import render_template, request, session, escape, redirect, url_for
 
 from wavvy import app
 from wavvy.auth import Auth
 
 auth = Auth(session)
+
+
+def requires_auth(view):
+    def inner(*args, **kwargs):
+        if auth.logged_in():
+            return view(*args, **kwargs)
+        return redirect(url_for('login'))
+
+    return inner
 
 
 @app.route('/')
