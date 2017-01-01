@@ -8,4 +8,7 @@ class Thermostat:
         return self.room_tempurature
 
     def adjust_temp(self, tempurature):
-        self.room_tempurature = tempurature
+        if tempurature < 0:
+            return False
+        self.room_tempurature = float(tempurature)
+        return True
