@@ -6,12 +6,6 @@ from wavvy.auth import Auth
 auth = Auth(session)
 
 
-@app.route('/hello')
-@app.route('/hello/<name>')
-def hello(name=None):
-    return render_template('hello.html', name=name)
-
-
 @app.route('/')
 def index():
     if auth.logged_in():
