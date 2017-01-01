@@ -28,8 +28,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    try:
-        session.logged_in = False
-    except AttributeError:
-        session.logged_in = False
+    session['logged_in'] = False
+    if 'username' in session:
+        del session['username']
     return 'You are logged out.'
