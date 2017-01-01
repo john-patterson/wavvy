@@ -1,3 +1,5 @@
+from wavvy.datalayer import authenticate
+
 __all__ = ['Auth']
 
 
@@ -17,7 +19,7 @@ class Auth:
         self.__clear_session()
         if username is None or password is None:
             return False
-        elif username != 'admin@admin' or password != 'admin':
+        elif not authenticate(username=username, plain_password=password):
             return False
 
         self.session['logged_in'] = True
