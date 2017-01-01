@@ -28,18 +28,21 @@ class Adjustment(db.Model):
     old_temp = db.Column(db.Float)
     new_temp = db.Column(db.Float)
     outside_temp = db.Column(db.Float)
+    room_temp = db.Column(db.Float)
     timestamp = db.Column(db.DateTime)
 
     adjuster_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     adjuster = db.relationship('User',
                                backref=db.backref('accounts', lazy='dynamic'))
 
-    def __init__(self, *, old_temp, new_temp, outside_temp, timestamp, adjuster):
+    def __init__(self, *, old_temp, new_temp, outside_temp, room_temp,
+                 timestamp, adjuster):
         self.old_temp = old_temp
         self.new_temp = new_temp
         self.outside_temp = outside_temp
         self.timestamp = timestamp
         self.adjuster = adjuster
+        self.room_temp = room_temp
 
     def __repr__(self):
         return '<Adjustment {}>'.format(repr(self.id))
