@@ -2,6 +2,12 @@ from wavvy import app
 from flask import Flask, url_for, render_template, request, session, escape
 
 
+def clear_session(s):
+    if 'username' in s:
+        del s['username']
+    s['logged_in'] = False
+
+
 @app.route('/hello')
 @app.route('/hello/<name>')
 def hello(name=None):
@@ -28,7 +34,5 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session['logged_in'] = False
-    if 'username' in session:
-        del session['username']
+    clear_session(session)
     return 'You are logged out.'
