@@ -1,40 +1,7 @@
+from flask import render_template, request, session, escape
+
 from wavvy import app
-
-from flask import Flask, url_for, render_template, request, session, escape
-
-
-class Auth:
-    def __init__(self, s):
-        self.session = s
-
-    def __clear_session(self):
-        if 'username' in self.session:
-            del self.session['username']
-        self.session['logged_in'] = False
-
-    def login(self, r):
-        username = r.form.get('username', None)
-        password = r.form.get('password', None)
-
-        self.__clear_session()
-        if username is None or password is None:
-            return False
-        elif username != 'admin@admin' or password != 'admin':
-            return False
-
-        self.session['logged_in'] = True
-        self.session['username'] = username
-        return True
-
-    def logout(self):
-        self.__clear_session()
-
-    def logged_in(self):
-        return self.session.get('logged_in', False)
-
-    def current_user(self):
-        return self.session.get('username', None)
-
+from wavvy.auth import Auth
 
 auth = Auth(session)
 
