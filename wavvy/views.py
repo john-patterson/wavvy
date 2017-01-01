@@ -29,6 +29,12 @@ class Auth:
     def logout(self):
         self.__clear_session()
 
+    def logged_in(self):
+        return self.session.get('logged_in', False)
+
+    def current_user(self):
+        return self.session.get('username', None)
+
 
 auth = Auth(session)
 
@@ -41,8 +47,8 @@ def hello(name=None):
 
 @app.route('/')
 def index():
-    if session.get('logged_in', False):
-        return 'Logged in as {}'.format(escape(session['username']))
+    if auth.logged_in():
+        return 'Logged in as {}'.format(escape(auth.current_user()))
     return 'You are not logged in.'
 
 
@@ -50,8 +56,9 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        if auth.login(request):
-            return '{} logged in!'.format(session['username'])
+        auth.login(request)
+        if auth.logged_in():
+            return '{} logged in!'.format(auth.current_user())
         error = 'Incorrect username or password!'
     return render_template('login.html', error=error)
 
