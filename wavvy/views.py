@@ -1,11 +1,36 @@
 from wavvy import app
+
 from flask import Flask, url_for, render_template, request, session, escape
 
 
-def clear_session(s):
-    if 'username' in s:
-        del s['username']
-    s['logged_in'] = False
+class Auth:
+    def __init__(self, s):
+        self.session = s
+
+    def __clear_session(self):
+        if 'username' in self.session:
+            del self.session['username']
+        self.session['logged_in'] = False
+
+    def login(self, r):
+        username = r.form.get('username', None)
+        password = r.form.get('password', None)
+
+        self.__clear_session()
+        if username is None or password is None:
+            return False
+        elif username != 'admin@admin' or password != 'admin':
+            return False
+
+        self.session['logged_in'] = True
+        self.session['username'] = username
+        return True
+
+    def logout(self):
+        self.__clear_session()
+
+
+auth = Auth(session)
 
 
 @app.route('/hello')
@@ -25,14 +50,13 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        session['logged_in'] = True
-        session['username'] = request.form['username']
-        password = escape(request.form['password'])
-        return 'Validating a login! U:{} P:{}'.format(escape(session['username']), password)
+        if auth.login(request):
+            return '{} logged in!'.format(session['username'])
+        error = 'Incorrect username or password!'
     return render_template('login.html', error=error)
 
 
 @app.route('/logout')
 def logout():
-    clear_session(session)
+    auth.logout()
     return 'You are logged out.'
