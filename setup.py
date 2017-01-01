@@ -5,6 +5,6 @@ setup(
     packages=['wavvy'],
     include_package_data=True,
     install_requires=[
-        'flask',
+        'flask', 'passlib',
     ],
 )
