@@ -10,3 +10,4 @@ import wavvy.views
 import wavvy.datalayer
 
 weather = wavvy.datalayer.OpenWeather(os.environ['WEATHER_API_KEY'])
+thermostat = wavvy.datalayer.Thermostat()
