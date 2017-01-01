@@ -10,5 +10,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 import wavvy.views
 import wavvy.datalayer
 
-weather = wavvy.datalayer.OpenWeather(os.environ['WEATHER_API_KEY'])
-thermostat = wavvy.datalayer.Thermostat()
+config = {
+    'owm-key': os.environ['WEATHER_API_KEY']
+}
+
+weather = wavvy.datalayer.weather.OpenWeather(config['owm-key'])
+thermostat = wavvy.datalayer.wave.Thermostat()
