@@ -17,9 +17,7 @@ def requires_auth(view):
 
 @app.route('/')
 def index():
-    if user.logged_in():
-        return 'Logged in as {}'.format(escape(user.current_user()))
-    return 'You are not logged in.'
+    return render_template('index.html')
 
 
 @app.route('/adjust', methods=['POST', 'GET'])
