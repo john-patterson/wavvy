@@ -10,7 +10,7 @@
     <li>The room is {{ '%.02f' % current_temp | float}} degrees F.</li>
     <li>The thermostat is set to {{ '%.02f' % current_setting | float}} degrees F.</li>
   </ul>
-<form class="form" action="" method="post">
+<form class="form" action="{{ url_for('adjust') }}" method="post">
   <input type="text" name="new_temp" placeholder="New Tempurature" required autofocus>
   <button type="submit">Submit</button>
 </form>
