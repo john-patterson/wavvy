@@ -1,5 +1,5 @@
 from wavvy import thermostat, app, weather, user
-from wavvy.datalayer import adjust
+from wavvy.datalayer import adjust, get_current_setting
 
 __all__ = ['current_room_temp', 'adjust_temp', 'current_outside_temp']
 
@@ -15,6 +15,10 @@ def celcius_to_fahrenheit(c):
     return (9 / 5) * c + 32
 
 
+def current_setting():
+    setting = get_current_setting()
+    return celcius_to_fahrenheit(setting) if setting else 'None'
+
 def current_room_temp():
     return celcius_to_fahrenheit(thermostat.room_temp())
 
@@ -26,11 +30,12 @@ def current_outside_temp():
 
 
 def adjust_temp(new_temp):
-    new_temp = fahrenheit_to_celcius(float(new_temp))
+    # form is assumed to be Fahrenheit
+    new_temp = float(new_temp)
+    thermostat.adjust_temp(fahrenheit_to_celcius(new_temp))
     outside = current_outside_temp()
     adjust(
-        new=float(new_temp),
+        new=new_temp,
         outside=outside,
         room=thermostat.room_temp(),
         username=user.current_user())
-    thermostat.adjust_temp(new_temp)

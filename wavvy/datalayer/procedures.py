@@ -7,7 +7,7 @@ from datetime import datetime
 salt_bytes = 25
 hash_iterations = 8000
 
-__all__ = ['add_user', 'authenticate', 'adjust']
+__all__ = ['add_user', 'authenticate', 'adjust', 'get_current_setting']
 
 
 def hash_pass(plain_password):
@@ -26,10 +26,9 @@ def add_user(*, username, plain_password, team=None):
 
 
 def get_by_username(username):
-    results = User.query.filter(User.username.ilike(username))
-    if not results:
-        return None
-    return results.first()
+    return User.query \
+            .filter(User.username.ilike(username)) \
+            .first()
 
 
 def authenticate(username, plain_password):
@@ -39,12 +38,16 @@ def authenticate(username, plain_password):
     return False
 
 def get_last_adjustment():
-    return Adjustment.query.order_by(desc(Adjustment.timestamp)).first()
+    return Adjustment.query.order_by(Adjustment.timestamp.desc()).first()
+
+def get_current_setting():
+    last_adjustment = get_last_adjustment()
+    return last_adjustment.new_temp if last_adjustment else None
 
 def adjust(*, new, outside, room, username):
     user = get_by_username(username)
     time = datetime.now()
-    old = get_last_adjustment()
+    old = get_last_adjustment().new_temp
     adjustment = Adjustment(
         old_temp=old,
         new_temp=new,
