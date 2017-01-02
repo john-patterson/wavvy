@@ -50,7 +50,8 @@ def get_current_setting():
 def adjust(*, new, outside, room, username):
     user = get_by_username(username)
     time = datetime.now()
-    old = get_last_adjustment().new_temp
+    old = get_last_adjustment()
+    old = old.new_temp if old else 0
     adjustment = Adjustment(
         old_temp=old,
         new_temp=new,
